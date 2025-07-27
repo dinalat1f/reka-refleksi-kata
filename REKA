@@ -1,0 +1,47 @@
+import streamlit as st
+
+st.set_page_config(page_title="REKA – Refleksi Kata", layout="centered")
+
+st.markdown(
+    """
+    <div style='text-align: center; padding: 2rem; background-color: #f5f1eb; border-radius: 15px;'>
+        <h1 style='color: #5d473a;'>REKA</h1>
+        <h3 style='color: #7a6655;'>Refleksi Kata</h3>
+        <p style='color: #5d473a; font-size: 1.2rem;'>
+            “Tempat di mana setiap kata menjadi cermin kecil untuk mengenali diri sendiri.”
+        </p>
+        <p style='margin-top: 2rem; font-size: 1rem; color: #7a6655;'>
+            Oleh Ardina Latif
+        </p>
+    </div>
+    """, 
+import streamlit as st
+
+st.set_page_config(page_title="REKA Chat", layout="wide")
+st.title("REKA – Ruang Refleksi Karakter")
+
+# Chat Input
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+user_input = st.text_input("Ketik di sini...")
+
+if user_input:
+    st.session_state.chat_history.append(("Kamu", user_input))
+    
+    # Jawaban sederhana (simulasi)
+    if "insecure" in user_input.lower():
+        balasan = "Ingat ya, kamu berharga bukan karena pencapaianmu, tapi karena kamu adalah kamu."
+    else:
+        balasan = "Terima kasih sudah bercerita. Kamu tidak sendiri."
+
+    st.session_state.chat_history.append(("REKA", balasan))
+
+# Tampilkan riwayat chat
+for sender, msg in st.session_state.chat_history:
+    if sender == "Kamu":
+        st.markdown(f"**🧍 {sender}:** {msg}")
+    else:
+        st.markdown(f"**🤖 {sender}:** {msg}")
+unsafe_allow_html=True
+)
