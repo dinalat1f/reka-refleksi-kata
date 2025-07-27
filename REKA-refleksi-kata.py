@@ -43,3 +43,43 @@ for sender, msg in st.session_state.chat_history:
         st.markdown(f"**🧍 {sender}:** {msg}")
     else:
         st.markdown(f"**🤖 {sender}:** {msg}")
+import streamlit as st
+from transformers import pipeline, set_seed
+
+st.set_page_config(page_title="REKA – Refleksi Afirmasi", layout="centered")
+
+# Load Model
+@st.cache_resource
+def load_model():
+    generator = pipeline("text-generation", model="cahya/gpt2-small-indonesian")
+    set_seed(42)
+    return generator
+
+generator = load_model()
+
+# Fungsi membuat prompt reflektif berdasarkan tema
+def buat_prompt(tema, input_user):
+    tema = tema.lower()
+    return f"Buat afirmasi positif dan reflektif bertema {tema} untuk seseorang yang berkata: \"{input_user}\".\nAfirmasi:"
+
+# UI
+st.markdown("<h1 style='text-align:center;'>REKA 🤍</h1>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align:center;'>Refleksi Karakter dan Kata</h4>", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# Form Input
+tema = st.selectbox("Pilih Tema Refleksi:", ["Motivasi", "Emosi", "Spiritual", "Netral"])
+user_input = st.text_area("Tuliskan isi hatimu atau cerita singkatmu...")
+
+if st.button("Refleksikan 🌿"):
+    if user_input.strip() != "":
+        prompt = buat_prompt(tema, user_input)
+        output = generator(prompt, max_length=100, num_return_sequences=1)[0]["generated_text"]
+        # Potong bagian prompt supaya hanya ambil hasil afirmasinya
+        afirmasi = output.replace(prompt, "").strip()
+
+        st.markdown("### ✨ Afirmasi untukmu:")
+        st.success(afirmasi)
+    else:
+        st.warning("Coba tuliskan sesuatu dulu, ya 🌱")
